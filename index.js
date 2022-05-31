@@ -4,11 +4,23 @@ const logger = require("koa-logger");
 const bodyParser = require("koa-bodyparser");
 const fs = require("fs");
 const path = require("path");
-const { init: initDB, Counter } = require("./db");
+const cors = require('koa2-cors')
+//const { init: initDB, Counter } = require("./db");
 
 const router = new Router();
 
 const homePage = fs.readFileSync(path.join(__dirname, "index.html"), "utf-8");
+const app = new Koa();
+app
+  .use(cors({
+    origin:['http://127.0.0.1:3889'],
+    credentials:true
+  }))
+  .use(logger())
+  .use(bodyParser())
+  .use(router.routes())
+  .use(router.allowedMethods())
+
 
 // 首页
 router.get("/", async (ctx) => {
@@ -19,13 +31,7 @@ router.get("/", async (ctx) => {
 router.post("/api/count", async (ctx) => {
   const { request } = ctx;
   const { action } = request.body;
-  if (action === "inc") {
-    await Counter.create();
-  } else if (action === "clear") {
-    await Counter.destroy({
-      truncate: true,
-    });
-  }
+  alert('1111')
 
   ctx.body = {
     code: 0,
@@ -34,12 +40,12 @@ router.post("/api/count", async (ctx) => {
 });
 
 // 获取计数
-router.get("/api/count", async (ctx) => {
-  const result = await Counter.count();
+router.get("/nextd", async (ctx) => {
+  console.log('1111')
 
   ctx.body = {
     code: 0,
-    data: result,
+  
   };
 });
 
@@ -50,16 +56,10 @@ router.get("/api/wx_openid", async (ctx) => {
   }
 });
 
-const app = new Koa();
-app
-  .use(logger())
-  .use(bodyParser())
-  .use(router.routes())
-  .use(router.allowedMethods());
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 8080;
 async function bootstrap() {
-  await initDB();
+  //await initDB();
   app.listen(port, () => {
     console.log("启动成功", port);
   });
