@@ -5,7 +5,7 @@ const bodyParser = require("koa-bodyparser");
 const fs = require("fs");
 const path = require("path");
 const cors = require('koa2-cors')
-//const { init: initDB, Counter } = require("./db");
+const { init: initDB, Counter } = require("./db");
 
 const router = new Router();
 
@@ -59,7 +59,7 @@ router.get("/api/wx_openid", async (ctx) => {
 
 const port = process.env.PORT || 8080;
 async function bootstrap() {
-  //await initDB();
+  await initDB();
   app.listen(port, () => {
     console.log("启动成功", port);
   });
