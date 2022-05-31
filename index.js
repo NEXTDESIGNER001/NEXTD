@@ -44,7 +44,7 @@ router.get("/nextd", async (ctx) => {
   console.log('1111')
 
   ctx.body = {
-    code: 0,
+    code: '你真的好棒',
   
   };
 });
